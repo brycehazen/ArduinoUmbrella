@@ -1,0 +1,37 @@
+
+const int stepsPerRev = 2048;
+const int lightPin = A0;
+int rotateOpen = 0;
+int rotateClose = 0;
+int rotateStart = 0;
+int lightVal = 0; 
+int motorSpeed=10;
+int dt = 2;
+
+Stepper stepperMotor(stepsPerRev, 8, 10, 9, 11);
+
+void setup()
+{
+Serial.begin(9600);
+stepperMotor.setSpeed(motorSpeed);
+}
+
+void loop(){
+  lightVal=analogRead(lightPin); 
+  Serial.println(lightVal);
+
+  if (lightVal >= 600 && rotateStart == 0)
+  {
+    rotateOpen = (0.5 * stepsPerRev);
+    stepperMotor.step(rotateOpen);
+    rotateStart = 1;
+    // delay(dt);
+  }
+  else if (lightVal <= 600 && rotateStart == 1)
+  {
+    rotateClose = (0.5 * -stepsPerRev);
+    stepperMotor.step(rotateClose);
+    rotateStart = 0;
+   // delay(dt);
+  }
+}
